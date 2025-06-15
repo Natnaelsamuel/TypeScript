@@ -1,6 +1,5 @@
 // Decorators
 // called once
-
 type ComponentOptions = {
     selector: string;
 }
@@ -17,7 +16,35 @@ function Component(options: ComponentOptions) {
     }
 }
 
+function Pipe(constructor: Function) {
+    console.log('pipe decorator called');
+    constructor.prototype.pipe = true;
+}
+
 
 @Component({ selector: '#my-profile' })
+@Pipe
+// f(g(x))
 class ProfileComponent {
 } 
+
+// Method decorators
+function Log(target: any, methodName: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.value as Function;
+    descriptor.value = function(...args: any) {
+        console.log('Before');
+        original.call(this, ...args);
+        console.log('After');
+    }
+}
+
+class Person {
+    
+    @Log
+    say(message: string) {
+        console.log(`Person says: ${message}`);
+    }
+}
+
+let person3 = new Person();
+person3.say('hello');
