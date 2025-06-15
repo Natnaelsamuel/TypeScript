@@ -38,13 +38,29 @@ function Log(target: any, methodName: string, descriptor: PropertyDescriptor) {
     }
 }
 
+function Capitalize(target: any, propertyName: string, descriptor: PropertyDescriptor) {
+    const original = descriptor.get;
+    descriptor.get = function() {
+        const result = original?.call(this);
+        return (typeof result === 'string') ? result.toUpperCase() : result;
+    }
+}
+
 class Person {
+
+    constructor(public firstName: string, public lastName: string) {}
     
     @Log
     say(message: string) {
         console.log(`Person says: ${message}`);
     }
+
+    @Capitalize
+    get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
 }
 
-let person3 = new Person();
-person3.say('hello');
+let human = new Person('Natnael', 'Samuel');
+console.log('person.fullName');
+;
