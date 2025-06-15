@@ -151,7 +151,7 @@ class Circle extends Shape {
 // }
 
 // Interfaces -> The same implememtation as above
-// Cant have constructor in interfaces, or method bodies
+// Cant have constructor in interfaces, or method 
 interface Calender {
     name: string;
     addEvent(): void;
