@@ -43,3 +43,37 @@ function echo<T extends number | string>(value: T): T {
     return value;
 }
 echo('true');
+
+interface Product {
+    name: string;
+    price: number;
+}
+
+class Store<T> {
+    protected objects: T[] = [];
+
+    private _add(object: T): void {
+        this.objects.push(object);
+    }
+}
+//passing on the generic type parameter
+class CompressibleStore<T> extends Store<T> {
+    compress() {}
+}
+let store = new CompressibleStore<Product>();
+store.compress();
+
+// Restricting the generic type parameter
+class SearchableStore<T extends { name: string }> extends Store<T> {
+    find(name: string): T | undefined {
+        return this.objects.find(obj => 
+            obj.name === name);
+        }
+}
+
+// Fxing the generic type parameter
+class ProductStore extends Store<Product> {
+    filterByCategory(category: string): Product[] {
+        return [];
+    }
+}
