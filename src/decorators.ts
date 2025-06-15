@@ -29,38 +29,68 @@ class ProfileComponent {
 } 
 
 // Method decorators
-function Log(target: any, methodName: string, descriptor: PropertyDescriptor) {
-    const original = descriptor.value as Function;
-    descriptor.value = function(...args: any) {
-        console.log('Before');
-        original.call(this, ...args);
-        console.log('After');
-    }
-}
+// function Log(target: any, methodName: string, descriptor: PropertyDescriptor) {
+//     const original = descriptor.value as Function;
+//     descriptor.value = function(...args: any) {
+//         console.log('Before');
+//         original.call(this, ...args);
+//         console.log('After');
+//     }
+// }
 
-function Capitalize(target: any, propertyName: string, descriptor: PropertyDescriptor) {
-    const original = descriptor.get;
-    descriptor.get = function() {
-        const result = original?.call(this);
-        return (typeof result === 'string') ? result.toUpperCase() : result;
-    }
-}
+// function Capitalize(target: any, propertyName: string, descriptor: PropertyDescriptor) {
+//     const original = descriptor.get;
+//     descriptor.get = function() {
+//         const result = original?.call(this);
+//         return (typeof result === 'string') ? result.toUpperCase() : result;
+//     }
+// }
 
-class Person {
+// class Person {
 
-    constructor(public firstName: string, public lastName: string) {}
+//     constructor(public firstName: string, public lastName: string) {}
     
-    @Log
-    say(message: string) {
-        console.log(`Person says: ${message}`);
-    }
+//     @Log
+//     say(message: string) {
+//         console.log(`Person says: ${message}`);
+//     }
 
-    @Capitalize
-    get fullName() {
-        return `${this.firstName} ${this.lastName}`;
+//     @Capitalize
+//     get fullName() {
+//         return `${this.firstName} ${this.lastName}`;
+//     }
+// }
+
+// let human = new Person('Natnael', 'Samuel');
+// console.log('person.fullName');
+
+// Property Decorator
+function MinLength(length: number) {
+    return (target: any, propertyName: string) => {
+        let value: string;
+
+        const descriptor: PropertyDescriptor = {
+            get() {
+                return value;
+            },
+            set(newValue: string) {
+                if (newValue.length < length)
+                    throw new Error(`${propertyName} must be at least ${length} characters long`);
+                value = newValue;
+            }
+        };
+
+        Object.defineProperty(target, propertyName, descriptor);
+    }
+}
+class User {
+    @MinLength(5)
+    password: string;
+
+    constructor(password: string) {
+        this.password = password;
     }
 }
 
-let human = new Person('Natnael', 'Samuel');
-console.log('person.fullName');
-;
+let newUser = new User('12345');
+console.log(newUser.password);
