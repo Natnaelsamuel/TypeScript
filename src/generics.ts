@@ -18,7 +18,6 @@ let numbers = ArrayUtils.wrapInArray(1);
 // Generic Interfaces
 // http://mywebsite.com/users
 // http://mywebsite.com/products
-
 interface Result<T> {
     data: T | null,
     error: string | null
@@ -38,3 +37,9 @@ interface Product {
 
 let result = fetch<User>('url');
 result.data?.username
+
+// Generic constraints
+function echo<T extends number | string>(value: T): T {
+    return value;
+}
+echo('true');
