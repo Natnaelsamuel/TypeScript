@@ -31,7 +31,7 @@ interface User {
     username: string;
 }
 
-interface Product {
+interface Product1 {
     title: string;
 }
 
@@ -52,20 +52,30 @@ interface Product {
 class Store<T> {
     protected objects: T[] = [];
 
-    private _add(object: T): void {
-        this.objects.push(object);
+   add(obj: T): void {
+        this.objects.push(obj);
+    }
+
+    // T is Product 
+    // keyof T => 'name' | 'price'
+    find(property: keyof T, value: unknown): T | undefined {
+        return this.objects.find(obj => 
+            obj[property] === value);
     }
 }
+let store1 = new Store<Product>();
+store1.add({ name: 'a', price: 1 });
+store1.find('name', 'a');
+store1.find('price', 1);
+
 //passing on the generic type parameter
 class CompressibleStore<T> extends Store<T> {
     compress() {}
 }
-let store = new CompressibleStore<Product>();
-store.compress();
 
 // Restricting the generic type parameter
 class SearchableStore<T extends { name: string }> extends Store<T> {
-    find(name: string): T | undefined {
+    findSearchableStore(name: string): T | undefined {
         return this.objects.find(obj => 
             obj.name === name);
         }
